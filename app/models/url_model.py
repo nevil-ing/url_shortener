@@ -1,12 +1,8 @@
-from sqlalchemy import Column, Integer, String, create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from pydantic import BaseModel, HttpUrl
 
-Base = declarative_base()
+# Request and response models
+class URLBase(BaseModel):
+    long_url: HttpUrl
 
-class Url(Base):
-    __tablename__ = 'urls'
-    id = Column(Integer, primary_key=True, index=True)
-    long_url = Column(String, index=True)
-    short_url = Column(String, unique=True, index=True)
-
-Base.metadata.create_all(bind=engine)
+class URLResponse(URLBase):
+    short_url: str
