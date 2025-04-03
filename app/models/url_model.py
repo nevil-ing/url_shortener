@@ -6,3 +6,6 @@ class URLBase(BaseModel):
 
 class URLResponse(URLBase):
     short_url: str
+
+class URLUpdate(BaseModel):
+    long_url: HttpUrl    
