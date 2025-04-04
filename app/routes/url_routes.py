@@ -1,4 +1,4 @@
-from pydantic import Basemodel, HttpUrl
+from pydantic import BaseModel, HttpUrl
 from fastapi import APIRouter
 from services.gen_url import base62_encode
 from models.url_model import URLBase, URLResponse
