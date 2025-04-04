@@ -9,4 +9,3 @@ class Url(Base):
     long_url = Column(String, index=True)
     short_url = Column(String, unique=True, index=True)
 
-Base.metadata.create_all(bind=engine)
