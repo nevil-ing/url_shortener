@@ -64,11 +64,11 @@ async def create_short_url(url: URLBase, session: AsyncSession = Depends(get_db)
 
      
         if new_url.id is None:
-            await session.rollback() # Rollback if ID is missing
+            await session.rollback() 
             logger.error("URL ID was not generated after flush.")
             raise HTTPException(status_code=500, detail="Failed to generate URL ID")
 
-        # Generate short URL using the ID obtained from flush()
+        
         short_code = base62_encode(new_url.id)
         generated_short_url = BASE_URL + short_code
         new_url.short_url = generated_short_url 
@@ -79,7 +79,7 @@ async def create_short_url(url: URLBase, session: AsyncSession = Depends(get_db)
         return {"long_url": new_url.long_url, "short_url": new_url.short_url}
 
     except Exception as e:
-        await session.rollback() # Rollback on any error during flush or commit
+        await session.rollback() 
         logger.error(f"Database error creating short URL for {long_url_str}: {e}")
         raise HTTPException(status_code=500, detail="Database error occurred.")
 
