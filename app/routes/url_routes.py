@@ -24,7 +24,7 @@ BASE_URL ="http://shortify.com/"
 
 router = APIRouter()
 
-@router.post("/shorten/", response_model=URLResponse(status_code = 201))
+@router.post("/shorten/", response_model=URLResponse)
 async def create_short_url(url: URLBase, session: AsyncSession = Depends(get_db)):
     
     long_url_str = str(url.long_url)
@@ -88,6 +88,7 @@ async def create_short_url(url: URLBase, session: AsyncSession = Depends(get_db)
 
 @router.get("/{short_code}")
 async def redirect_to_url(short_code: str, session: AsyncSession = Depends(get_db)):
+    global click_count
     full_short_url = BASE_URL + short_code
     query = select(Url).where(Url.short_url == full_short_url)
     result = await session.execute(query)
@@ -106,7 +107,8 @@ async def redirect_to_url(short_code: str, session: AsyncSession = Depends(get_d
     if not is_valid_url(db_url.long_url):
          logger.error(f"Stored long_url '{db_url.long_url}' for short code {short_code} is invalid.")
          raise HTTPException(status_code=500, detail="Invalid target URL configured.") 
-
+       
+    click_count += 1
     return RedirectResponse(url=db_url.long_url)
 
 
@@ -160,3 +162,11 @@ async def delete_url(short_code: str, session: AsyncSession = Depends(get_db)):
         await session.rollback()
         logger.error(f"Database error deleting {short_code}: {e}")
         raise HTTPException(status_code=500, detail="Database error occurred during delete.")
+
+
+@router.get("/stats/", response_model=URLResponse)
+async def get_stats():
+    return JSONResponse(
+        status_code=200,
+        content={"message": f"Number of Clicks is{click_count}"}
+    )      

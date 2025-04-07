@@ -6,6 +6,7 @@ class URLBase(BaseModel):
 
 class URLResponse(URLBase):
     short_url: str
+    click_count: int
 
 class URLUpdate(BaseModel):
     long_url: HttpUrl    
