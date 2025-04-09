@@ -2,12 +2,12 @@ import logging
 from pydantic import BaseModel, HttpUrl
 from fastapi import APIRouter, Depends
 from services.gen_unique_id import base62_encode
-from models.url_model import URLBase, URLResponse, URLUpdate 
+from app.schemas.url_schema import URLBase, URLResponse, URLUpdate 
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from core.config import get_db
-from schemas.url_schemas import Url
+from app.model.url_model import Url
 import validators
 from fastapi import HTTPException
 from fastapi.responses import RedirectResponse
